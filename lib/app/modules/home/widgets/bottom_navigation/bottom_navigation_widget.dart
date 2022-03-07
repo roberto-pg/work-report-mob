@@ -26,7 +26,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
     }
     if (_selectedIndex == 2) {
       _validate.logoutUser();
-      Modular.to.navigate('/auth');
+      Modular.to.navigate('/auth/login');
     }
     if (_selectedIndex == 3) {
       exit(0);

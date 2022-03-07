@@ -29,15 +29,15 @@ class _WorkTextfieldState extends State<WorkTextfield> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        prefixIcon: Icon(widget.icon),
-        suffixIcon: widget.suffix,
-        labelText: widget.hint,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
+          prefixIcon: Icon(widget.icon),
+          suffixIcon: widget.suffix,
+          labelText: widget.hint,
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          errorStyle: const TextStyle(color: Colors.white)),
       keyboardType: widget.keyboardType,
       obscureText: widget.obscuredTextPassword ?? false,
       onSaved: widget.onSaved,

@@ -23,7 +23,7 @@ class SplashStore {
         });
       } else {
         return Timer(Duration(milliseconds: splashDuration), () {
-          Modular.to.navigate('/auth/');
+          Modular.to.navigate('/auth/login');
         });
       }
     }

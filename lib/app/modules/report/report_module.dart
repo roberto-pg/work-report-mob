@@ -11,7 +11,7 @@ class ReportModule extends Module {
   final List<Bind> binds = [
     Bind.lazySingleton((i) => ListReportStore(service: i())),
     Bind.lazySingleton(
-        (i) => DetailReportStore(reportService: i(), userService: i())),
+        (i) => DetailReportStore(reportService: i(), authService: i())),
   ];
 
   @override

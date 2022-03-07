@@ -32,6 +32,7 @@ class _DetailReportPageState
     return Scaffold(
       backgroundColor: const Color(0XFF3a4750),
       appBar: AppBar(
+        centerTitle: true,
         elevation: 0,
         backgroundColor: const Color(0XFF3a4750),
         title: Text(

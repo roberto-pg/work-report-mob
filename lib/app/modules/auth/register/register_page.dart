@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/core/ui/widgets/work_textfield.dart';
+import 'package:work_report/app/models/user.dart';
+import 'package:work_report/app/modules/auth/register/register_store.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -9,9 +13,17 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ModularState<RegisterPage, RegisterStore> {
   final _formKey = GlobalKey<FormState>();
   bool obscuredTextPassword = true;
+  var user = User(
+    id: '',
+    name: '',
+    email: '',
+    cpf: '',
+    password: '',
+    token: '',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -52,37 +64,34 @@ class _RegisterPageState extends State<RegisterPage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        const WorkTextfield(
+                        WorkTextfield(
                           icon: Icons.person,
                           hint: 'Nome',
                           keyboardType: TextInputType.name,
-                          // onChanged: store.saveName,
-                          // onSaved: (text) {
-                          //   user = user.copyWith(name: text);
-                          // },
-                          // validator: (text) => store.validateName,
+                          onSaved: (text) => user = user.copyWith(name: text),
+                          validator: Validatorless.required('Nome obrigatório'),
                         ),
                         const SizedBox(height: 15),
-                        const WorkTextfield(
+                        WorkTextfield(
                           icon: Icons.email,
                           hint: 'Email',
                           keyboardType: TextInputType.emailAddress,
-                          // onChanged: store.saveEmail,
-                          // onSaved: (text) {
-                          //   user = user.copyWith(email: text);
-                          // },
-                          // validator: (text) => store.validateEmail,
+                          onSaved: (text) => user = user.copyWith(email: text),
+                          validator: Validatorless.multiple([
+                            Validatorless.required('Email obrigatório'),
+                            Validatorless.email('Email inválido')
+                          ]),
                         ),
                         const SizedBox(height: 15),
-                        const WorkTextfield(
+                        WorkTextfield(
                           icon: Icons.security,
                           hint: 'CPF',
                           keyboardType: TextInputType.number,
-                          // onChanged: store.saveCpf,
-                          // onSaved: (text) {
-                          //   user = user.copyWith(cpf: text);
-                          // },
-                          // validator: (text) => store.validateCpf,
+                          onSaved: (text) => user = user.copyWith(cpf: text),
+                          validator: Validatorless.multiple([
+                            Validatorless.required('CPF obrigatório'),
+                            Validatorless.cpf('CPF inválido'),
+                          ]),
                         ),
                         const SizedBox(height: 15),
                         WorkTextfield(
@@ -100,14 +109,27 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           keyboardType: TextInputType.number,
                           obscuredTextPassword: obscuredTextPassword,
-                          // onChanged: store.savePassword,
-                          // onSaved: (text) =>
-                          //     user = user.copyWith(password: text),
-                          // validator: (text) => store.validatePassword,
+                          onSaved: (text) =>
+                              user = user.copyWith(password: text),
+                          validator: Validatorless.multiple([
+                            Validatorless.required('Senha obrigatória'),
+                            Validatorless.min(6,
+                                'A senha não pode ter menos de 6 caracteres'),
+                          ]),
                         ),
                         const SizedBox(height: 30),
                         WorkButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            var formValid =
+                                _formKey.currentState?.validate() ?? false;
+
+                            if (formValid) {
+                              _formKey.currentState!.save();
+                              await store.addUser(user.name, user.email,
+                                  user.cpf, user.password);
+                              _formKey.currentState?.reset();
+                            }
+                          },
                           label: 'Salvar',
                           fontSize: 20,
                           width: MediaQuery.of(context).size.width,

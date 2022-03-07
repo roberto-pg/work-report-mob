@@ -111,7 +111,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                             if (formValid) {
                               _formKey.currentState!.save();
 
-                              await controller.login(user.cpf, user.password);
+                              await store.login(user.cpf, user.password);
                               _formKey.currentState!.reset();
                             }
                           },
@@ -136,7 +136,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                             ),
                             InkWell(
                               onTap: () {
-                                Modular.to.pushNamed('/register/');
+                                Modular.to.pushNamed('/auth/register');
                               },
                               child: Text(
                                 'Cadastre-se',

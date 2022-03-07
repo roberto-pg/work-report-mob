@@ -26,7 +26,7 @@ class AuthInterceptor extends Interceptor {
       alertInterceptor(
         () => [
           _validate.logoutUser(),
-          Modular.to.navigate('/auth/'),
+          Modular.to.navigate('/auth/login'),
         ],
       );
     }

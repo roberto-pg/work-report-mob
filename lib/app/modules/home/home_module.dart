@@ -8,7 +8,7 @@ class HomeModule extends Module {
   final List<Bind> binds = [
     Bind.lazySingleton(
         (i) => AllReportsStore(reportService: i())),
-    Bind.lazySingleton((i) => HomeStore(userService: i())),
+    Bind.lazySingleton((i) => HomeStore(authService: i())),
   ];
 
   @override

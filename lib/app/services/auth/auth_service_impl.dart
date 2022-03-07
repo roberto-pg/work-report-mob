@@ -14,6 +14,12 @@ class AuthServiceImpl implements AuthService {
         _storage = storage;
 
   @override
+  Future<User> addUser(String name, String email, String cpf, String password) {
+    var response = _repository.addUser(name, email, cpf, password);
+    return response;
+  }
+
+  @override
   Future<User> login(String cpf, String password) async {
     var response = await _repository.login(cpf, password);
     await _storage.write(key: 'jwt', value: response.token);
@@ -22,6 +28,9 @@ class AuthServiceImpl implements AuthService {
 
     return response;
   }
+
+  @override
+  Future<User> loadUserById() => _repository.loadUserById(); 
 
   @override
   Future<String> logout() {
