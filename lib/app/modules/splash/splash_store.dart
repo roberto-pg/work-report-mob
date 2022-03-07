@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SplashStore {
   final FlutterSecureStorage _storage;
-  final int splashDuration = 1000;
+  final int splashDuration = 3000;
 
   SplashStore({required FlutterSecureStorage storage}) : _storage = storage;
 

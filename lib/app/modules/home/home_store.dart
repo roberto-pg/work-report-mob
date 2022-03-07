@@ -7,15 +7,15 @@ class HomeStore extends ValueNotifier<HomeState> {
 
   HomeStore({required UserService userService})
       : _userService = userService,
-        super(InitialState());
+        super(InitialHome());
 
   Future<void> loadUserById() async {
-    value = LoadingState();
+    value = LoadingHome();
     try {
       final user = await _userService.loadUserById();
-      value = LoadedState(user);
+      value = LoadedHome(user);
     } catch (e) {
-      value = ErrorState(e.toString());
+      value = ErrorHome(e.toString());
     }
   }
 }

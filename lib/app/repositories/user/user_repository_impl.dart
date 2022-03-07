@@ -15,7 +15,8 @@ class UserRepositoryImpl implements UserRepository {
   Future<User> loadUserById() async {
     try {
       var response = await _customDioAuth.get('/api/user-by-id');
-      return User.fromMap(response.data);
+      User user = User.fromMap(response.data);
+      return user;
     } on DioError catch (error) {
       if (error.type.toString() == 'DioErrorType.other') {
         throw const CustomException('Problema inesperado no servidor');

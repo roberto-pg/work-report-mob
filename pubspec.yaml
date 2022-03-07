@@ -20,6 +20,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   equatable: ^2.0.3
   validatorless: ^1.2.1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

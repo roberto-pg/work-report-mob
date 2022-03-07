@@ -35,7 +35,7 @@ class WorkButton extends StatelessWidget {
               Radius.circular(10),
             ),
           ),
-          primary: const Color(0XFF3a4750),
+          primary: const Color(0XFFf64e8b),
         ),
       ),
     );

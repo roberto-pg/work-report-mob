@@ -7,7 +7,7 @@ import 'interceptors/auth_interceptor.dart';
 
 class CustomDioAuth extends DioForNative {
   final FlutterSecureStorage _storage;
-  final IValidator _validate;
+  final Validator _validate;
 
   static final _baseOptions = BaseOptions(
     baseUrl: Env.baseUrl,
@@ -16,7 +16,7 @@ class CustomDioAuth extends DioForNative {
   );
 
   CustomDioAuth(
-      {required FlutterSecureStorage storage, required IValidator validate})
+      {required FlutterSecureStorage storage, required Validator validate})
       : _storage = storage,
         _validate = validate,
         super(_baseOptions) {

@@ -2,16 +2,16 @@ import 'package:work_report/app/models/user.dart';
 
 abstract class HomeState {}
 
-class InitialState extends HomeState {}
+class InitialHome extends HomeState {}
 
-class LoadedState extends HomeState {
+class LoadingHome extends HomeState {}
+
+class LoadedHome extends HomeState {
   final User user;
-  LoadedState(this.user);
+  LoadedHome(this.user);
 }
 
-class LoadingState extends HomeState {}
-
-class ErrorState extends HomeState {
+class ErrorHome extends HomeState {
   final String message;
-  ErrorState(this.message);
+  ErrorHome(this.message);
 }

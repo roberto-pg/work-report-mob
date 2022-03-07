@@ -29,7 +29,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue.shade100,
+      backgroundColor: const Color(0XFF3a4750),
       body: LayoutBuilder(builder: (_, constraints) {
         return SingleChildScrollView(
           child: ConstrainedBox(
@@ -44,7 +44,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                     padding: const EdgeInsets.only(top: 40, bottom: 20),
                     child: Center(
                       child: Image.asset(
-                        'assets/images/bar_trans.png',
+                        'assets/images/bar_transp.png',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -129,7 +129,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                               style: GoogleFonts.roboto(
                                 textStyle: const TextStyle(
                                   fontSize: 16.0,
-                                  color: Color(0XFFf64e8b),
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -143,14 +143,15 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                                 style: GoogleFonts.roboto(
                                   textStyle: const TextStyle(
                                     fontSize: 16.0,
-                                    color: Color(0XFFf64e8b),
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
                             )
                           ],
-                        )
+                        ),
+                        const SizedBox(height: 30)
                       ],
                     ),
                   )

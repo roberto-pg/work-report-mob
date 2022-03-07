@@ -8,10 +8,10 @@ import '../../validators/validator.dart';
 
 class AuthInterceptor extends Interceptor {
   final FlutterSecureStorage _storage;
-  final IValidator _validate;
+  final Validator _validate;
 
   AuthInterceptor(
-      {required FlutterSecureStorage storage, required IValidator validate})
+      {required FlutterSecureStorage storage, required Validator validate})
       : _storage = storage,
         _validate = validate;
 

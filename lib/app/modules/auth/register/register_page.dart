@@ -16,15 +16,16 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue.shade100,
+      backgroundColor: const Color(0XFF3a4750),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.lightBlue.shade100,
-        iconTheme: const IconThemeData(color: Color(0XFF3a4750)),
+        centerTitle: true,
+        backgroundColor: const Color(0XFF3a4750),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Crie sua conta',
           style: TextStyle(
-            color: Color(0XFF3a4750),
+            color: Colors.white,
           ),
         ),
       ),
@@ -40,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.only(top: 0, bottom: 40),
                   child: Center(
                     child: Image.asset(
-                      'assets/images/bar_trans.png',
+                      'assets/images/bar_transp.png',
                       fit: BoxFit.cover,
                     ),
                   ),

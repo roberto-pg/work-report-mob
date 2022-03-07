@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:work_report/app/core/validators/validator.dart';
 
-class ValidatorImpl implements IValidator {
+class ValidatorImpl implements Validator {
   final FlutterSecureStorage _storage;
 
   ValidatorImpl({required FlutterSecureStorage storage}) : _storage = storage;
