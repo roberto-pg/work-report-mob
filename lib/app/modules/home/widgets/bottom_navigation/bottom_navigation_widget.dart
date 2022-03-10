@@ -26,8 +26,6 @@ class _BottomNavigationWidgetState
       await store.validToken();
       if (_isTokenExpired) {
         alertFactory(
-            'Oops!!',
-            'Algo deu errado...\nFaça o login novamente',
             '',
             'Fechar',
             () => {},
@@ -44,8 +42,6 @@ class _BottomNavigationWidgetState
       await store.validToken();
       if (_isTokenExpired) {
         alertFactory(
-            'Oops!!',
-            'Algo deu errado...\nFaça o login novamente',
             '',
             'Fechar',
             () => {},

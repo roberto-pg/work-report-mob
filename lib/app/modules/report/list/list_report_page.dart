@@ -96,8 +96,6 @@ class _ListReportPageState
                             await homeStore.validToken();
                             if (_isTokenExpired) {
                               alertFactory(
-                                  'Oops!!',
-                                  'Algo deu errado...\nFaça o login novamente',
                                   '',
                                   'Fechar',
                                   () => {},

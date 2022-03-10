@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 alertFactory(
-  final String title,
-  final String content,
-  final String confirm,
-  final String cancel,
+  final String confirmButtonText,
+  final String cancelButtonText,
   final VoidCallback confirmFunction,
   final VoidCallback cancelFunction,
 ) {
@@ -18,7 +16,7 @@ alertFactory(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             insetPadding: const EdgeInsets.only(left: 40, right: 40),
             title: Text(
-              title,
+              'Oops !!',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 textStyle: const TextStyle(
@@ -29,7 +27,7 @@ alertFactory(
               ),
             ),
             content: Text(
-              content,
+              'Algo deu errado...\nFaça o login novamente',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 textStyle: const TextStyle(
@@ -42,7 +40,7 @@ alertFactory(
             actions: [
               TextButton(
                 child: Text(
-                  confirm,
+                  confirmButtonText,
                   style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                       color: Colors.white,
@@ -55,7 +53,7 @@ alertFactory(
               ),
               TextButton(
                 child: Text(
-                  cancel,
+                  cancelButtonText,
                   style: GoogleFonts.roboto(
                     textStyle: const TextStyle(
                       color: Colors.white,
