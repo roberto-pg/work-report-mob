@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:validatorless/validatorless.dart';
-import 'package:work_report/app/core/alerts/auth_alert.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/core/ui/widgets/work_textfield.dart';
 import 'package:work_report/app/models/user.dart';
@@ -119,7 +119,11 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                               _formKey.currentState!.reset();
 
                               if (_userLogin.isEmpty) {
-                                return authAlert(_errorLogin);
+                                return alertFactory(
+                                  dismissible: true,
+                                  titleText: 'Erro no Login',
+                                  contentText: _errorLogin,
+                                );
                               }
                             }
                           },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:validatorless/validatorless.dart';
-import 'package:work_report/app/core/alerts/auth_alert.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/core/ui/widgets/work_textfield.dart';
 import 'package:work_report/app/models/user.dart';
@@ -134,7 +134,11 @@ class _RegisterPageState extends ModularState<RegisterPage, RegisterStore> {
                               _formKey.currentState?.reset();
 
                               if (_userRegister.isEmpty) {
-                                return authAlert(_errorRegister);
+                                return alertFactory(
+                                  dismissible: true,
+                                  titleText: 'Erro na Operação',
+                                  contentText: _errorRegister,
+                                );
                               }
                             }
                           },

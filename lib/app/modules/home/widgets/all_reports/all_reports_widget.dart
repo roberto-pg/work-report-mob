@@ -47,10 +47,10 @@ class _AllReportsWidgetState
                 await homeStore.validToken();
                 if (_isTokenExpired) {
                   alertFactory(
-                      '',
-                      'Fechar',
-                      () => {},
-                      () => {
+                      titleText: 'Oops!!',
+                      contentText: 'Algo deu errado...\nFaça o login novamente',
+                      cancelButtonText: 'Fechar',
+                      cancelFunction: () => {
                             homeStore.logout(),
                             Modular.to.navigate('/auth/login'),
                             Navigator.of(context, rootNavigator: true).pop()

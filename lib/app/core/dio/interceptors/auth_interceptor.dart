@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:work_report/app/core/alerts/alert_interceptor.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/validators/validator.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -22,10 +22,14 @@ class AuthInterceptor extends Interceptor {
     bool isTokenExpired = await _validate.expiredToken();
 
     if (isTokenExpired) {
-      alertInterceptor(() async => {
-            await _validate.logoutUser(),
-            Modular.to.navigate('/auth/login'),
-          });
+      alertFactory(
+          titleText: 'Oops!!',
+          contentText: 'Algo deu errado...\nFaça o login novamente',
+          dioButtonText: 'Fechar',
+          dioFunction: () async => {
+                await _validate.logoutUser(),
+                Modular.to.navigate('/auth/login'),
+              });
     }
 
     if (!isTokenExpired) {

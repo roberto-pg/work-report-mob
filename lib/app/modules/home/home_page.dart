@@ -125,10 +125,11 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                                   await store.validToken();
                                   if (_isTokenExpired) {
                                     alertFactory(
-                                        '',
-                                        'Fechar',
-                                        () => {},
-                                        () => {
+                                        titleText: 'Oops!!',
+                                        contentText:
+                                            'Algo deu errado...\nFaça o login novamente',
+                                        cancelButtonText: 'Fechar',
+                                        cancelFunction: () => {
                                               store.logout(),
                                               Modular.to
                                                   .navigate('/auth/login'),
@@ -172,10 +173,11 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                                   await store.validToken();
                                   if (_isTokenExpired) {
                                     alertFactory(
-                                        '',
-                                        'Fechar',
-                                        () => {},
-                                        () => {
+                                        titleText: 'Oops!!',
+                                        contentText:
+                                            'Algo deu errado...\nFaça o login novamente',
+                                        cancelButtonText: 'Fechar',
+                                        cancelFunction: () => {
                                               store.logout(),
                                               Modular.to
                                                   .navigate('/auth/login'),

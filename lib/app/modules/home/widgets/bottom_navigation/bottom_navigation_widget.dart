@@ -26,10 +26,10 @@ class _BottomNavigationWidgetState
       await store.validToken();
       if (_isTokenExpired) {
         alertFactory(
-            '',
-            'Fechar',
-            () => {},
-            () => {
+            titleText: 'Oops!!',
+            contentText: 'Algo deu errado...\nFaça o login novamente',
+            cancelButtonText: 'Fechar',
+            cancelFunction: () => {
                   store.logout(),
                   Modular.to.navigate('/auth/login'),
                   Navigator.of(context, rootNavigator: true).pop()
@@ -42,10 +42,10 @@ class _BottomNavigationWidgetState
       await store.validToken();
       if (_isTokenExpired) {
         alertFactory(
-            '',
-            'Fechar',
-            () => {},
-            () => {
+            titleText: 'Oops!!',
+            contentText: 'Algo deu errado...\nFaça o login novamente',
+            cancelButtonText: 'Fechar',
+            cancelFunction: () => {
                   store.logout(),
                   Modular.to.navigate('/auth/login'),
                   Navigator.of(context, rootNavigator: true).pop()
