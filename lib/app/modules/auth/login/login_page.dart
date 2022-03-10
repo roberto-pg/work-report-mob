@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:validatorless/validatorless.dart';
+import 'package:work_report/app/core/alerts/auth_alert.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/core/ui/widgets/work_textfield.dart';
 import 'package:work_report/app/models/user.dart';
@@ -15,6 +16,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends ModularState<LoginPage, LoginStore> {
+  String get _userLogin => store.userLogin;
+  String get _errorLogin => store.errorLogin;
+
   final _formKey = GlobalKey<FormState>();
   bool obscuredTextPassword = true;
   var user = User(
@@ -29,7 +33,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XFF3a4750),
+      backgroundColor: Theme.of(context).primaryColorDark,
       body: LayoutBuilder(builder: (_, constraints) {
         return SingleChildScrollView(
           child: ConstrainedBox(
@@ -59,7 +63,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                     style: GoogleFonts.ubuntu(
                         textStyle: const TextStyle(fontSize: 30.0),
                         fontWeight: FontWeight.w500,
-                        color: const Color(0XFFf64e8b)),
+                        color: Theme.of(context).primaryColor),
                   ),
                   const SizedBox(height: 40),
                   Padding(
@@ -113,6 +117,10 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
 
                               await store.login(user.cpf, user.password);
                               _formKey.currentState!.reset();
+
+                              if (_userLogin.isEmpty) {
+                                return authAlert(_errorLogin);
+                              }
                             }
                           },
                           label: 'Entrar',
@@ -154,7 +162,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                         const SizedBox(height: 30)
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

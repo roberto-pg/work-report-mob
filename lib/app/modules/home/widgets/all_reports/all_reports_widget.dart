@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/models/report.dart';
 import 'package:intl/intl.dart';
+import 'package:work_report/app/modules/home/home_store.dart';
 import 'package:work_report/app/modules/home/widgets/all_reports/all_reports_store.dart';
 
 class AllReportsWidget extends StatefulWidget {
@@ -18,6 +20,10 @@ class AllReportsWidget extends StatefulWidget {
 
 class _AllReportsWidgetState
     extends ModularState<AllReportsWidget, AllReportsStore> {
+  final homeStore = Modular.get<HomeStore>();
+
+  bool get _isTokenExpired => homeStore.isTokenExpired;
+
   @override
   void initState() {
     super.initState();
@@ -37,9 +43,24 @@ class _AllReportsWidgetState
                 dateFormat.format(DateTime.parse(start.toString()));
 
             return GestureDetector(
-              onTap: () {
-                String id = widget._reports[index].id;
-                Modular.to.pushNamed('/report/detail', arguments: id);
+              onTap: () async {
+                await homeStore.validToken();
+                if (_isTokenExpired) {
+                  alertFactory(
+                      'Oops',
+                      'Algo deu errado...\nFaça o login novamente',
+                      '',
+                      'Fechar',
+                      () => {},
+                      () => {
+                            homeStore.logout(),
+                            Modular.to.navigate('/auth/login'),
+                            Navigator.of(context, rootNavigator: true).pop()
+                          });
+                } else {
+                  String id = widget._reports[index].id;
+                  Modular.to.pushNamed('/report/detail', arguments: id);
+                }
               },
               child: Card(
                 shape: RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:validatorless/validatorless.dart';
+import 'package:work_report/app/core/alerts/auth_alert.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/core/ui/widgets/work_textfield.dart';
 import 'package:work_report/app/models/user.dart';
@@ -14,6 +15,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends ModularState<RegisterPage, RegisterStore> {
+  String get _userRegister => store.userRegister;
+  String get _errorRegister => store.errorRegister;
+
   final _formKey = GlobalKey<FormState>();
   bool obscuredTextPassword = true;
   var user = User(
@@ -128,6 +132,10 @@ class _RegisterPageState extends ModularState<RegisterPage, RegisterStore> {
                               await store.addUser(user.name, user.email,
                                   user.cpf, user.password);
                               _formKey.currentState?.reset();
+
+                              if (_userRegister.isEmpty) {
+                                return authAlert(_errorRegister);
+                              }
                             }
                           },
                           label: 'Salvar',

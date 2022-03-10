@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/utils/time_ago.dart';
+import 'package:work_report/app/modules/home/home_store.dart';
 import 'package:work_report/app/modules/report/list/list_report_state.dart';
 import 'package:work_report/app/modules/report/list/list_report_store.dart';
 
@@ -17,6 +19,9 @@ class ListReportPage extends StatefulWidget {
 
 class _ListReportPageState
     extends ModularState<ListReportPage, ListReportStore> {
+  final homeStore = Modular.get<HomeStore>();
+  bool get _isTokenExpired => homeStore.isTokenExpired;
+
   @override
   void initState() {
     super.initState();
@@ -87,12 +92,29 @@ class _ListReportPageState
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
                         child: GestureDetector(
-                          onTap: () {
-                            String id = state.report[index].id;
-                            !(state.report[index].finished)
-                                ? Modular.to.pushNamed('/report/stop')
-                                : Modular.to
-                                    .pushNamed('/report/detail', arguments: id);
+                          onTap: () async {
+                            await homeStore.validToken();
+                            if (_isTokenExpired) {
+                              alertFactory(
+                                  'Oops!!',
+                                  'Algo deu errado...\nFaça o login novamente',
+                                  '',
+                                  'Fechar',
+                                  () => {},
+                                  () => {
+                                        homeStore.logout(),
+                                        Modular.to.navigate('/auth/login'),
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop()
+                                      });
+                            } else {
+                              String id = state.report[index].id;
+                              !(state.report[index].finished)
+                                  ? Modular.to.pushNamed('/report/stop')
+                                  : Modular.to.pushNamed('/report/detail',
+                                      arguments: id);
+                            }
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(

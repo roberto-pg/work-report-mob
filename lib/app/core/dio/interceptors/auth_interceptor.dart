@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../../alerts/alert_interceptor.dart';
-import '../../validators/validator.dart';
+import 'package:work_report/app/core/alerts/alert_interceptor.dart';
+import 'package:work_report/app/core/validators/validator.dart';
 
 class AuthInterceptor extends Interceptor {
   final FlutterSecureStorage _storage;
@@ -23,12 +22,10 @@ class AuthInterceptor extends Interceptor {
     bool isTokenExpired = await _validate.expiredToken();
 
     if (isTokenExpired) {
-      alertInterceptor(
-        () => [
-          _validate.logoutUser(),
-          Modular.to.navigate('/auth/login'),
-        ],
-      );
+      alertInterceptor(() async => {
+            await _validate.logoutUser(),
+            Modular.to.navigate('/auth/login'),
+          });
     }
 
     if (!isTokenExpired) {

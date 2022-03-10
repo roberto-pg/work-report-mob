@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/validators/validator_impl.dart';
+import 'package:work_report/app/modules/home/home_store.dart';
 
 class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({Key? key}) : super(key: key);
@@ -10,19 +12,51 @@ class BottomNavigationWidget extends StatefulWidget {
   _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
 }
 
-class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
+class _BottomNavigationWidgetState
+    extends ModularState<BottomNavigationWidget, HomeStore> {
   final _validate = Modular.get<ValidatorImpl>();
   int _selectedIndex = 0;
+  bool get _isTokenExpired => store.isTokenExpired;
 
-  void _onItemTapped(int index) {
+  Future<void> _onItemTapped(int index) async {
     setState(() {
       _selectedIndex = index;
     });
     if (_selectedIndex == 0) {
-      Modular.to.pushNamed('/report/', arguments: true);
+      await store.validToken();
+      if (_isTokenExpired) {
+        alertFactory(
+            'Oops!!',
+            'Algo deu errado...\nFaça o login novamente',
+            '',
+            'Fechar',
+            () => {},
+            () => {
+                  store.logout(),
+                  Modular.to.navigate('/auth/login'),
+                  Navigator.of(context, rootNavigator: true).pop()
+                });
+      } else {
+        Modular.to.pushNamed('/report/', arguments: true);
+      }
     }
     if (_selectedIndex == 1) {
-      Modular.to.pushNamed('/report/', arguments: false);
+      await store.validToken();
+      if (_isTokenExpired) {
+        alertFactory(
+            'Oops!!',
+            'Algo deu errado...\nFaça o login novamente',
+            '',
+            'Fechar',
+            () => {},
+            () => {
+                  store.logout(),
+                  Modular.to.navigate('/auth/login'),
+                  Navigator.of(context, rootNavigator: true).pop()
+                });
+      } else {
+        Modular.to.pushNamed('/report/', arguments: false);
+      }
     }
     if (_selectedIndex == 2) {
       _validate.logoutUser();

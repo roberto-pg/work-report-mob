@@ -30,13 +30,12 @@ class WorkButton extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
             ),
-          ),
-          primary: const Color(0XFFf64e8b),
-        ),
+            primary: Theme.of(context).primaryColor),
       ),
     );
   }

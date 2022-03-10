@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/modules/home/widgets/all_reports/all_reports_store.dart';
 import 'package:work_report/app/modules/home/home_state.dart';
 import 'package:work_report/app/modules/home/home_store.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends ModularState<HomePage, HomeStore> {
   final storeReport = Modular.get<AllReportsStore>();
+  bool get _isTokenExpired => store.isTokenExpired;
 
   @override
   void initState() {
@@ -119,8 +121,26 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                               child: IconButton(
                                 iconSize: 44,
                                 alignment: Alignment.center,
-                                onPressed: () {
-                                  Modular.to.pushNamed('/report/start');
+                                onPressed: () async {
+                                  await store.validToken();
+                                  if (_isTokenExpired) {
+                                    alertFactory(
+                                        'Oops!!',
+                                        'Algo deu errado...\nFaça o login novamente',
+                                        '',
+                                        'Fechar',
+                                        () => {},
+                                        () => {
+                                              store.logout(),
+                                              Modular.to
+                                                  .navigate('/auth/login'),
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop()
+                                            });
+                                  } else {
+                                    Modular.to.pushNamed('/report/start');
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.playlist_add,
@@ -150,9 +170,27 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                               child: IconButton(
                                 iconSize: 35,
                                 alignment: Alignment.center,
-                                onPressed: () {
-                                  Modular.to
-                                      .pushNamed('/report/', arguments: false);
+                                onPressed: () async {
+                                  await store.validToken();
+                                  if (_isTokenExpired) {
+                                    alertFactory(
+                                        'Oops!!',
+                                        'Algo deu errado...\nFaça o login novamente',
+                                        '',
+                                        'Fechar',
+                                        () => {},
+                                        () => {
+                                              store.logout(),
+                                              Modular.to
+                                                  .navigate('/auth/login'),
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop()
+                                            });
+                                  } else {
+                                    Modular.to.pushNamed('/report/',
+                                        arguments: false);
+                                  }
                                 },
                                 icon: const Icon(
                                   Icons.build,
