@@ -19,14 +19,18 @@ alertFactory({
             backgroundColor: Theme.of(context).primaryColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            insetPadding: const EdgeInsets.symmetric(horizontal: 50),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 70),
+            buttonPadding: EdgeInsets.zero,
+            titlePadding: const EdgeInsets.only(top: 20, bottom: 10),
+            contentPadding: EdgeInsets.zero,
+            actionsPadding: EdgeInsets.zero,
             title: Text(
               titleText ?? '',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 textStyle: const TextStyle(
                   color: Colors.white,
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
               ),

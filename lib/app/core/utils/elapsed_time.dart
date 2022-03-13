@@ -1,4 +1,4 @@
-timeAgo<String>(DateTime taskEnd, DateTime taskStart) {
+elapsedTime<String>(DateTime taskEnd, DateTime taskStart) {
   Duration diff = taskEnd.difference(taskStart);
   if (diff.inDays > 365) {
     return "${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "ano" : "anos"}";

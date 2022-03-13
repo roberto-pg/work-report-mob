@@ -121,7 +121,7 @@ class _LoginPageState extends ModularState<LoginPage, LoginStore> {
                               if (_userLogin.isEmpty) {
                                 return alertFactory(
                                   dismissible: true,
-                                  titleText: 'Erro no Login',
+                                  titleText: 'Oops!!',
                                   contentText: _errorLogin,
                                 );
                               }

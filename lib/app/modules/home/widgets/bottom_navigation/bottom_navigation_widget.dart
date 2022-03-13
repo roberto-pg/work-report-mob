@@ -51,7 +51,7 @@ class _BottomNavigationWidgetState
                   Navigator.of(context, rootNavigator: true).pop()
                 });
       } else {
-        Modular.to.pushNamed('/report/', arguments: false);
+        Modular.to.navigate('/report/', arguments: false);
       }
     }
     if (_selectedIndex == 2) {

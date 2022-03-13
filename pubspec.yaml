@@ -22,6 +22,7 @@ dependencies:
   validatorless: ^1.2.1
   intl: ^0.17.0
   image_picker: ^0.8.4+11
+  http_parser: ^4.0.0
 
 dev_dependencies:
   flutter_test:

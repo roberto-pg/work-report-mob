@@ -29,8 +29,8 @@ class HomeStore extends ValueNotifier<HomeState> {
     try {
       final user = await _authService.loadUserById();
       value = LoadedHome(user);
-    } catch (e) {
-      value = ErrorHome(e.toString());
+    } catch (error) {
+      value = ErrorHome(error.toString());
     }
   }
 }

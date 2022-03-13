@@ -188,7 +188,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                                                     .pop()
                                               });
                                     } else {
-                                      Modular.to.pushNamed('/report/',
+                                      Modular.to.navigate('/report/',
                                           arguments: false);
                                     }
                                   },

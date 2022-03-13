@@ -136,7 +136,7 @@ class _RegisterPageState extends ModularState<RegisterPage, RegisterStore> {
                               if (_userRegister.isEmpty) {
                                 return alertFactory(
                                   dismissible: true,
-                                  titleText: 'Erro na Operação',
+                                  titleText: 'Oops!!',
                                   contentText: _errorRegister,
                                 );
                               }

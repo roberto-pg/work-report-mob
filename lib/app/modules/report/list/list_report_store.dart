@@ -3,16 +3,16 @@ import 'package:work_report/app/modules/report/list/list_report_state.dart';
 import 'package:work_report/app/services/report/report_service.dart';
 
 class ListReportStore extends ValueNotifier<ListState> {
-  final ReportService _service;
+  final ReportService _reportService;
 
-  ListReportStore({required ReportService service})
-      : _service = service,
+  ListReportStore({required ReportService reportService})
+      : _reportService = reportService,
         super(InitialList());
 
   Future<void> loadReportsByFinished(bool finished) async {
     value = LoadingList();
     try {
-      final reports = await _service.loadReportsByFinishedAttribute(finished);
+      final reports = await _reportService.loadReportsByFinishedAttribute(finished);
       value = LoadedList(reports);
     } catch (e) {
      value = ErrorList(e.toString());

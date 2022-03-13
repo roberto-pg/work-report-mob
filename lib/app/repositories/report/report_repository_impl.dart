@@ -60,4 +60,36 @@ class ReportRepositoryImpl implements ReportRepository {
       }
     }
   }
+
+  @override
+  Future<Report> startReport(FormData formData) async {
+    try {
+      var response =
+          await _customDioAuth.post('/api/start-report', data: formData);
+      Report report = Report.fromMap(response.data);
+      return report;
+    } on DioError catch (error) {
+      if (error.type.toString() == 'DioErrorType.other') {
+        throw const CustomException('Problema inesperado no servidor');
+      } else {
+        throw CustomException(error.response?.data);
+      }
+    }
+  }
+
+  @override
+  Future<Report> stopReport(FormData formData, String id) async {
+    try {
+      var response =
+          await _customDioAuth.patch('/api/close-report/$id', data: formData);
+      Report report = Report.fromMap(response.data);
+      return report;
+    } on DioError catch (error) {
+      if (error.type.toString() == 'DioErrorType.other') {
+        throw const CustomException('Problema inesperado no servidor');
+      } else {
+        throw CustomException(error.response?.data);
+      }
+    }
+  }
 }

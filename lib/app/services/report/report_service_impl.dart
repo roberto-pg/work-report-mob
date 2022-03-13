@@ -1,6 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:work_report/app/models/report.dart';
 import 'package:work_report/app/repositories/report/report_repository.dart';
-
 import './report_service.dart';
 
 class ReportServiceImpl implements ReportService {
@@ -18,4 +18,12 @@ class ReportServiceImpl implements ReportService {
 
   @override
   Future<Report> loadReportById(String id) => _repository.loadReportById(id);
+
+  @override
+  Future<Report> startReport(FormData formData) =>
+      _repository.startReport(formData);
+
+  @override
+  Future<Report> stopReport(FormData formData, String id) =>
+      _repository.stopReport(formData, id);
 }

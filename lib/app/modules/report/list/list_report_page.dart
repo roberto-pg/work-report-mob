@@ -3,10 +3,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
-import 'package:work_report/app/core/utils/time_ago.dart';
-import 'package:work_report/app/modules/home/home_store.dart';
+import 'package:work_report/app/core/utils/elapsed_time.dart';
 import 'package:work_report/app/modules/report/list/list_report_state.dart';
 import 'package:work_report/app/modules/report/list/list_report_store.dart';
+
+import '../report_store.dart';
 
 class ListReportPage extends StatefulWidget {
   final bool finished;
@@ -19,8 +20,8 @@ class ListReportPage extends StatefulWidget {
 
 class _ListReportPageState
     extends ModularState<ListReportPage, ListReportStore> {
-  final homeStore = Modular.get<HomeStore>();
-  bool get _isTokenExpired => homeStore.isTokenExpired;
+  final reportStore = Modular.get<ReportStore>();
+  bool get _isTokenExpired => reportStore.isTokenExpired;
 
   @override
   void initState() {
@@ -33,7 +34,14 @@ class _ListReportPageState
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
         backgroundColor: const Color(0XFF3a4750),
+        leading: IconButton(
+            onPressed: () {
+              Modular.to.navigate('/home/');
+            },
+            icon: const Icon(Icons.arrow_back),
+            color: Colors.white),
         title: Text(
           widget.finished ? 'Tarefas Finalizadas' : 'Tarefas Abertas',
           style: GoogleFonts.roboto(
@@ -72,7 +80,7 @@ class _ListReportPageState
                             DateTime.parse(state.report[index].startedAt);
                         DateTime? taskEnd =
                             DateTime.parse(state.report[index].stopedAt);
-                        taskDurationTime = timeAgo(taskEnd, taskStart);
+                        taskDurationTime = elapsedTime(taskEnd, taskStart);
 
                         DateTime? end =
                             DateTime.parse(state.report[index].stopedAt);
@@ -93,7 +101,7 @@ class _ListReportPageState
                             horizontal: 20, vertical: 10),
                         child: GestureDetector(
                           onTap: () async {
-                            await homeStore.validToken();
+                            await reportStore.validToken();
                             if (_isTokenExpired) {
                               alertFactory(
                                   titleText: 'Oops!!',
@@ -101,7 +109,7 @@ class _ListReportPageState
                                       'Algo deu errado...\nFaça o login novamente',
                                   cancelButtonText: 'Fechar',
                                   cancelFunction: () => {
-                                        homeStore.logout(),
+                                        reportStore.logout(),
                                         Modular.to.navigate('/auth/login'),
                                         Navigator.of(context,
                                                 rootNavigator: true)
@@ -110,7 +118,8 @@ class _ListReportPageState
                             } else {
                               String id = state.report[index].id;
                               !(state.report[index].finished)
-                                  ? Modular.to.pushNamed('/report/stop')
+                                  ? Modular.to
+                                      .pushNamed('/report/stop', arguments: id)
                                   : Modular.to.pushNamed('/report/detail',
                                       arguments: id);
                             }

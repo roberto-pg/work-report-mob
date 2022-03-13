@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:work_report/app/core/utils/time_ago.dart';
+import 'package:work_report/app/core/utils/elapsed_time.dart';
 import 'package:work_report/app/modules/report/detail/detail_report_store.dart';
 
 import 'detail_report_state.dart';
@@ -53,7 +53,7 @@ class _DetailReportPageState
               if (state is LoadedDetail) {
                 DateTime? taskStart = DateTime.parse(state.report.startedAt);
                 DateTime? taskEnd = DateTime.parse(state.report.stopedAt);
-                String? taskDurationTime = timeAgo(taskEnd, taskStart);
+                String? taskDurationTime = elapsedTime(taskEnd, taskStart);
 
                 final dateFormat = DateFormat('dd-MM-yyyy HH:mm');
 
