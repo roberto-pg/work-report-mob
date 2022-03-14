@@ -27,6 +27,7 @@ class _StopReportPageState
   bool get _isTokenExpired => reportStore.isTokenExpired;
   final _formKey = GlobalKey<FormState>();
   String description = '';
+  DateTime stopReport = DateTime.now();
   File? imageFile;
 
   @override
@@ -122,66 +123,10 @@ class _StopReportPageState
                         Validatorless.required('Descrição final obrigatória'),
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    WorkButton(
-                      onPressed: () async {
-                        await reportStore.validToken();
-                        if (_isTokenExpired) {
-                          alertFactory(
-                              titleText: 'Oops!!',
-                              contentText:
-                                  'Algo deu errado...\nFaça o login novamente',
-                              cancelButtonText: 'Fechar',
-                              cancelFunction: () => {
-                                    reportStore.logout(),
-                                    Modular.to.navigate('/auth/login'),
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop()
-                                  });
-                        } else {
-                          var formValid =
-                              _formKey.currentState?.validate() ?? false;
-
-                          if (formValid) {
-                            _formKey.currentState!.save();
-
-                            if (imageFile == null) {
-                              alertFactory(
-                                dismissible: true,
-                                titleText: 'Oops!!',
-                                contentText: 'Imagem obrigatória',
-                              );
-                              return;
-                            }
-
-                            var formData = FormData.fromMap({
-                              "finalDescription": description,
-                              "imageUrl": await MultipartFile.fromFile(
-                                  imageFile!.path,
-                                  filename: imageFile!.path,
-                                  contentType: MediaType('image', 'png')),
-                            });
-
-                            await store.stopReport(formData, widget.id);
-                            alertFactory(
-                                titleText: 'Sucesso!',
-                                contentText: 'Serviço finalizado',
-                                cancelButtonText: 'Fechar',
-                                cancelFunction: () => {
-                                      Modular.to.navigate('/home/'),
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop()
-                                    });
-                          }
-                        }
-                      },
-                      label: 'Finalizar',
-                      width: 120,
-                      height: 50,
-                    ),
                     WorkButton(
                       onPressed: () {
                         Modular.to.navigate('/home/');
@@ -190,8 +135,71 @@ class _StopReportPageState
                       width: 120,
                       height: 50,
                     ),
+                    WorkButton(
+                      onPressed: () {},
+                      label: 'Excluir',
+                      width: 120,
+                      height: 50,
+                    ),
                   ],
-                )
+                ),
+                const SizedBox(height: 30),
+                WorkButton(
+                  onPressed: () async {
+                    await reportStore.validToken();
+                    if (_isTokenExpired) {
+                      alertFactory(
+                          titleText: 'Oops!!',
+                          contentText:
+                              'Algo deu errado...\nFaça o login novamente',
+                          cancelButtonText: 'Fechar',
+                          cancelFunction: () => {
+                                reportStore.logout(),
+                                Modular.to.navigate('/auth/login'),
+                                Navigator.of(context, rootNavigator: true).pop()
+                              });
+                    } else {
+                      var formValid =
+                          _formKey.currentState?.validate() ?? false;
+
+                      if (formValid) {
+                        _formKey.currentState!.save();
+
+                        if (imageFile == null) {
+                          alertFactory(
+                            dismissible: true,
+                            titleText: 'Oops!!',
+                            contentText: 'Imagem obrigatória',
+                          );
+                          return;
+                        }
+
+                        var formData = FormData.fromMap({
+                          "finalDescription": description,
+                          "imageUrl": await MultipartFile.fromFile(
+                              imageFile!.path,
+                              filename: imageFile!.path,
+                              contentType: MediaType('image', 'png')),
+                          "stopedAt": stopReport,
+                        });
+
+                        await store.stopReport(formData, widget.id);
+                        alertFactory(
+                            titleText: 'Sucesso!',
+                            contentText: 'Serviço finalizado',
+                            cancelButtonText: 'Fechar',
+                            cancelFunction: () => {
+                                  Modular.to.navigate('/home/'),
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop()
+                                });
+                      }
+                    }
+                  },
+                  label: 'Finalizar',
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                ),
               ],
             ),
           ),
