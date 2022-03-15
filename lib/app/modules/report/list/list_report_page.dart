@@ -117,9 +117,11 @@ class _ListReportPageState
                                       });
                             } else {
                               String id = state.report[index].id;
+                              String image = (state.report[index].initialImage);
+                              var initialImage = image.split('/');
                               !(state.report[index].finished)
-                                  ? Modular.to
-                                      .pushNamed('/report/stop', arguments: id)
+                                  ? Modular.to.pushNamed('/report/stop',
+                                      arguments: [id, initialImage[3]])
                                   : Modular.to.pushNamed('/report/detail',
                                       arguments: id);
                             }

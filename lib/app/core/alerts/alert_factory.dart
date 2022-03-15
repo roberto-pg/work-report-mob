@@ -20,79 +20,78 @@ alertFactory({
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             insetPadding: const EdgeInsets.symmetric(horizontal: 70),
-            buttonPadding: EdgeInsets.zero,
-            titlePadding: const EdgeInsets.only(top: 20, bottom: 10),
-            contentPadding: EdgeInsets.zero,
-            actionsPadding: EdgeInsets.zero,
             title: Text(
               titleText ?? '',
-              textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 textStyle: const TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             content: Text(
               contentText ?? '',
-              textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
                 textStyle: const TextStyle(
                   color: Colors.white,
-                  fontSize: 17,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             actions: [
-              TextButton(
-                child: Text(
-                  confirmButtonText ?? '',
-                  style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                onPressed:
-                    confirmFunction != null ? () => confirmFunction() : null,
-              ),
-              TextButton(
-                child: Text(
-                  cancelButtonText ?? '',
-                  style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                onPressed:
-                    cancelFunction != null ? () => cancelFunction() : null,
-              ),
-              TextButton(
-                  child: Text(
-                    dioButtonText ?? '',
-                    style: GoogleFonts.roboto(
-                      textStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
+              Row(
+                children: [
+                  TextButton(
+                      child: Text(
+                        dioButtonText ?? '',
+                        style: GoogleFonts.roboto(
+                          textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      onPressed: dioFunction == null
+                          ? null
+                          : () => [
+                                dioFunction(),
+                                Navigator.of(context).pop(),
+                                Navigator.of(context).pop()
+                              ]),
+                  TextButton(
+                    child: Text(
+                      confirmButtonText ?? '',
+                      style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
+                    onPressed: confirmFunction != null
+                        ? () => confirmFunction()
+                        : null,
                   ),
-                  onPressed: dioFunction == null
-                      ? null
-                      : () => [
-                            dioFunction(),
-                            Navigator.of(context).pop(),
-                            Navigator.of(context).pop()
-                          ]),
+                  TextButton(
+                    child: Text(
+                      cancelButtonText ?? '',
+                      style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    onPressed:
+                        cancelFunction != null ? () => cancelFunction() : null,
+                  ),
+                ],
+              ),
             ],
           ));
 }

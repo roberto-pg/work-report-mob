@@ -7,4 +7,5 @@ abstract class ReportService {
   Future<Report> loadReportById(String id);
   Future<Report> startReport(FormData formData);
   Future<Report> stopReport(FormData formData, String id);
+  Future<String> deleteReport(String id, String initialImage);
 }

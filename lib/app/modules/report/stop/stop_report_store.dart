@@ -15,4 +15,13 @@ class StopReportStore {
       return 'Falha na operação';
     }
   }
+
+  Future<String> deleteReport(String id, String initialImage) async {
+    try {
+      await _reportService.deleteReport(id, initialImage);
+      return 'Relatório excluido';
+    } catch (error) {
+      return 'Falha na operação';
+    }
+  }
 }

@@ -24,7 +24,9 @@ class ReportModule extends Module {
   final List<ModularRoute> routes = [
     ChildRoute('/', child: (_, args) => ListReportPage(finished: args.data)),
     ChildRoute('/start', child: (_, args) => const StartReportPage()),
-    ChildRoute('/stop', child: (_, args) => StopReportPage(id: args.data)),
+    ChildRoute('/stop',
+        child: (_, args) =>
+            StopReportPage(id: args.data[0], initialImage: args.data[1])),
     ChildRoute('/detail', child: (_, args) => DetailReportPage(id: args.data)),
   ];
 }

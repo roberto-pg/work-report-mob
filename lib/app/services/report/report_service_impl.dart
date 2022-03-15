@@ -26,4 +26,8 @@ class ReportServiceImpl implements ReportService {
   @override
   Future<Report> stopReport(FormData formData, String id) =>
       _repository.stopReport(formData, id);
+
+  @override
+  Future<String> deleteReport(String id, String initialImage) =>
+      _repository.deleteReport(id, initialImage);
 }

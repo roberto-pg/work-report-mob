@@ -14,8 +14,10 @@ import '../report_store.dart';
 
 class StopReportPage extends StatefulWidget {
   final String id;
+  final String initialImage;
 
-  const StopReportPage({Key? key, required this.id}) : super(key: key);
+  const StopReportPage({Key? key, required this.id, required this.initialImage})
+      : super(key: key);
 
   @override
   _StopReportPageState createState() => _StopReportPageState();
@@ -136,7 +138,23 @@ class _StopReportPageState
                       height: 50,
                     ),
                     WorkButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        alertFactory(
+                            titleText: 'Confirmação',
+                            contentText: 'Deseja excluir a tarefa?',
+                            confirmButtonText: 'Excluir',
+                            cancelButtonText: 'Cancelar',
+                            confirmFunction: () async => [
+                                  await store.deleteReport(
+                                      widget.id, widget.initialImage),
+                                  Modular.to.navigate('/home'),
+                                ],
+                            cancelFunction: () => [
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
+                                  Modular.to.navigate('/home'),
+                                ]);
+                      },
                       label: 'Excluir',
                       width: 120,
                       height: 50,

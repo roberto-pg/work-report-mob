@@ -92,4 +92,19 @@ class ReportRepositoryImpl implements ReportRepository {
       }
     }
   }
+
+  @override
+  Future<String> deleteReport(String id, String initialImage) async {
+    try {
+      var response = await _customDioAuth.delete('/api/delete-report',
+          data: {'id': id, 'initialImage': initialImage});
+      return response.data;
+    } on DioError catch (error) {
+      if (error.type.toString() == 'DioErrorType.other') {
+        throw const CustomException('Problema inesperado no servidor');
+      } else {
+        throw CustomException(error.response?.data);
+      }
+    }
+  }
 }
