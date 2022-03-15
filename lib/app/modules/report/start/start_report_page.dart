@@ -173,7 +173,7 @@ class _StartReportPageState
                             await store.startReport(formData);
                             alertFactory(
                                 titleText: 'Sucesso!',
-                                contentText: 'Serviço em andamento',
+                                contentText: 'Serviço iniciado',
                                 cancelButtonText: 'Fechar',
                                 cancelFunction: () => {
                                       Modular.to.navigate('/home/'),

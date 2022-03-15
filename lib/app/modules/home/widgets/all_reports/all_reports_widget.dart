@@ -66,16 +66,16 @@ class _AllReportsWidgetState
                 ),
                 elevation: 10,
                 child: Container(
+                  width: 140,
+                  height: 60,
                   color: Colors.white,
                   padding: const EdgeInsets.all(10),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.network(
                         widget._reports[index].initialImage,
                         alignment: Alignment.topLeft,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         height: 80.0,
                       ),
                       Padding(
