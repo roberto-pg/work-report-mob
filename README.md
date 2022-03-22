@@ -1,18 +1,6 @@
-# work_report_back
+# Work Report
 
-A new Flutter project.
+<img src="./assets/images/bar_transp.png" alt="main page" width="200">
 
-## Getting Started
+This app is designed to be an external task control tool. It records the start time and initial image of the work to be performed, as well as the initial assessment of the responsible technician. At the end of the task, it registers the final image of the service, and the description of the service performed. 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-Add lib http_parser para usar MediaType no FormData
