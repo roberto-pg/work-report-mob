@@ -7,6 +7,7 @@ import 'package:work_report/app/modules/report/start/start_report_store.dart';
 import 'package:work_report/app/modules/report/stop/stop_report_page.dart';
 import 'package:work_report/app/modules/report/stop/stop_report_store.dart';
 import 'detail/detail_report_page.dart';
+import 'detail/widgets/initial_image_widget.dart';
 import 'list/list_report_page.dart';
 
 class ReportModule extends Module {
@@ -28,5 +29,8 @@ class ReportModule extends Module {
         child: (_, args) =>
             StopReportPage(id: args.data[0], initialImage: args.data[1])),
     ChildRoute('/detail', child: (_, args) => DetailReportPage(id: args.data)),
+    ChildRoute('/initial-image',
+        child: (_, args) =>
+            InitialImageWidget(id: args.data[0], initialImage: args.data[1]))
   ];
 }

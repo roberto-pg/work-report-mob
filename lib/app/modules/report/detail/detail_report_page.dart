@@ -243,7 +243,13 @@ class _DetailReportPageState
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Modular.to.pushNamed('/report/initial-image',
+                                  arguments: [
+                                    state.report.id,
+                                    state.report.initialImage
+                                  ]);
+                            },
                             child: Image.network(
                               state.report.initialImage,
                               alignment: Alignment.center,
