@@ -3,11 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
 class InitialImageWidget extends StatelessWidget {
-  final String id;
   final String initialImage;
 
-  const InitialImageWidget(
-      {Key? key, required this.id, required this.initialImage})
+  const InitialImageWidget({Key? key, required this.initialImage})
       : super(key: key);
 
   @override

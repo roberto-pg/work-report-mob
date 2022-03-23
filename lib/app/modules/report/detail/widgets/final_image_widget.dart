@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:photo_view/photo_view.dart';
 
 class FinalImageWidget extends StatelessWidget {
-final String id;
+  final String finalImage;
 
-  const FinalImageWidget({Key? key, required this.id}) : super(key: key);
+  const FinalImageWidget({Key? key, required this.finalImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,12 @@ final String id;
                   fontWeight: FontWeight.w700)),
         ),
       ),
-      body: Container(),
+      body: PhotoView(
+        imageProvider: NetworkImage(finalImage),
+        backgroundDecoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+      ),
     );
   }
 }
