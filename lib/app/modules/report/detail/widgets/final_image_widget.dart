@@ -26,6 +26,7 @@ class FinalImageWidget extends StatelessWidget {
         ),
       ),
       body: PhotoView(
+        enableRotation: true,
         imageProvider: NetworkImage(finalImage),
         backgroundDecoration: const BoxDecoration(
           color: Colors.transparent,

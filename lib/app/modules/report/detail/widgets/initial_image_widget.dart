@@ -26,6 +26,7 @@ class InitialImageWidget extends StatelessWidget {
         ),
       ),
       body: PhotoView(
+        enableRotation: true,
         imageProvider: NetworkImage(initialImage),
         backgroundDecoration: const BoxDecoration(
           color: Colors.transparent,
