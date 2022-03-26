@@ -10,3 +10,10 @@ This app is designed to be an external task control tool. It records the start t
 ## What features does the app have?
 - [x] User Creation
 - [x] User Login
+- [x] Report creation
+- [x] Finalize report
+- [x] Image upload
+- [x] List of completed tasks with time spent
+- [x] Finished task detail 
+- [x] List of running tasks
+- [x] Screen for viewing the enlarged image
