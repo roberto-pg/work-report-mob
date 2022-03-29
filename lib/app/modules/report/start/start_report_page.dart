@@ -21,9 +21,11 @@ class StartReportPage extends StatefulWidget {
 }
 
 class _StartReportPageState
-    extends ModularState<StartReportPage, StartReportStore> {
+    extends ModularState<StartReportPage, StartReportStore>
+    with WidgetsBindingObserver {
   final reportStore = Modular.get<ReportStore>();
   bool get _isTokenExpired => reportStore.isTokenExpired;
+
   final _formKey = GlobalKey<FormState>();
   String description = '';
   DateTime startReport = DateTime.now();
@@ -34,6 +36,7 @@ class _StartReportPageState
 
   void onNewCameraSelected(CameraDescription cameraDescription) async {
     final previousCameraController = camControl;
+    // Instantiating the camera controller
     final CameraController cameraController = CameraController(
       cameraDescription,
       ResolutionPreset.medium,
