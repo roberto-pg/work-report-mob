@@ -1,16 +1,17 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
 import 'package:work_report/app/modules/report/start/start_report_store.dart';
-
 import '../report_store.dart';
+import '../../../../main.dart';
 
 class StartReportPage extends StatefulWidget {
   const StartReportPage({Key? key}) : super(key: key);
@@ -23,11 +24,96 @@ class _StartReportPageState
     extends ModularState<StartReportPage, StartReportStore> {
   final reportStore = Modular.get<ReportStore>();
   bool get _isTokenExpired => reportStore.isTokenExpired;
-
   final _formKey = GlobalKey<FormState>();
   String description = '';
   DateTime startReport = DateTime.now();
   File? imageFile;
+
+  CameraController? camControl;
+  bool _isCameraInitialized = false;
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+    final previousCameraController = camControl;
+    final CameraController cameraController = CameraController(
+      cameraDescription,
+      ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+    );
+
+    // Dispose the previous controller
+    await previousCameraController?.dispose();
+
+    // Replace with the new controller
+    if (mounted) {
+      setState(() {
+        camControl = cameraController;
+      });
+    }
+
+    // Update UI if controller updated
+    cameraController.addListener(() {
+      if (mounted) setState(() {});
+    });
+
+    // Initialize controller
+    try {
+      await cameraController.initialize();
+    } on CameraException catch (e) {
+      log('Error initializing camera: $e');
+    }
+
+    // Update the Boolean
+    if (mounted) {
+      setState(() {
+        _isCameraInitialized = camControl!.value.isInitialized;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    onNewCameraSelected(cameras[0]);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    camControl?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = camControl;
+
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      // Free up memory when camera not active
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      // Reinitialize the camera with same properties
+      onNewCameraSelected(cameraController.description);
+    }
+  }
+
+  Future<XFile?> takePicture() async {
+    final CameraController? cameraController = camControl;
+    if (cameraController!.value.isTakingPicture) {
+      // A capture is already pending, do nothing.
+      return null;
+    }
+    try {
+      XFile file = await cameraController.takePicture();
+      return file;
+    } on CameraException catch (e) {
+      log('Error occured while taking picture: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +142,17 @@ class _StartReportPageState
               children: [
                 const SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () {
-                    _selectorImageSource();
+                  onTap: () async {
+                    XFile? rawImage = await takePicture();
+                    imageFile = File(rawImage!.path);
+
+                    // int currentUnix = DateTime.now().millisecondsSinceEpoch;
+                    // final directory = await getApplicationDocumentsDirectory();
+                    // String fileFormat = imageFile.path.split('.').last;
+                    log(imageFile!.path);
+                    // await imageFile.copy(
+                    //   '${directory.path}/$currentUnix.$fileFormat',
+                    // );
                   },
                   child: Card(
                     color: Colors.white,
@@ -204,96 +299,98 @@ class _StartReportPageState
       ),
     );
   }
-
-  _selectorImageSource() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: AlertDialog(
-              title: Text('Escolha a origem:',
-                  style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black54),
-                  )),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      _openCamera();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 90,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(9.0)),
-                      child: Text("Camera",
-                          style: GoogleFonts.roboto(
-                            textStyle: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _openGallery();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 90,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(9.0)),
-                      child: Text("Galeria",
-                          style: GoogleFonts.roboto(
-                            textStyle: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  _openCamera() async {
-    final imagePicker = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxWidth: 800,
-        maxHeight: 600,
-        imageQuality: 80);
-    if (imagePicker == null) return;
-    setState(() {
-      imageFile = File(imagePicker.path);
-    });
-  }
-
-  _openGallery() async {
-    final imagePicker = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 800,
-        maxHeight: 600,
-        imageQuality: 80);
-    if (imagePicker == null) return;
-    setState(() {
-      imageFile = File(imagePicker.path);
-    });
-  }
 }
+
+
+  // _selectorImageSource() {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 20),
+  //           child: AlertDialog(
+  //             title: Text('Escolha a origem:',
+  //                 style: GoogleFonts.roboto(
+  //                   textStyle: const TextStyle(
+  //                       fontSize: 20.0,
+  //                       fontWeight: FontWeight.w700,
+  //                       color: Colors.black54),
+  //                 )),
+  //             content: Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: <Widget>[
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     _openCamera();
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Container(
+  //                     alignment: Alignment.center,
+  //                     width: 90,
+  //                     height: 50.0,
+  //                     decoration: BoxDecoration(
+  //                         color: Theme.of(context).primaryColor,
+  //                         borderRadius: BorderRadius.circular(9.0)),
+  //                     child: Text("Camera",
+  //                         style: GoogleFonts.roboto(
+  //                           textStyle: const TextStyle(
+  //                             fontSize: 18.0,
+  //                             fontWeight: FontWeight.w700,
+  //                             color: Colors.white,
+  //                           ),
+  //                         )),
+  //                   ),
+  //                 ),
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     _openGallery();
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Container(
+  //                     alignment: Alignment.center,
+  //                     width: 90,
+  //                     height: 50.0,
+  //                     decoration: BoxDecoration(
+  //                         color: Theme.of(context).primaryColor,
+  //                         borderRadius: BorderRadius.circular(9.0)),
+  //                     child: Text("Galeria",
+  //                         style: GoogleFonts.roboto(
+  //                           textStyle: const TextStyle(
+  //                             fontSize: 18.0,
+  //                             fontWeight: FontWeight.w700,
+  //                             color: Colors.white,
+  //                           ),
+  //                         )),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
+
+  // _openCamera() async {
+  //   final imagePicker = await ImagePicker().pickImage(
+  //       source: ImageSource.camera,
+  //       maxWidth: 800,
+  //       maxHeight: 600,
+  //       imageQuality: 80);
+  //   if (imagePicker == null) return;
+  //   setState(() {
+  //     imageFile = File(imagePicker.path);
+  //   });
+  // }
+
+  // _openGallery() async {
+  //   final imagePicker = await ImagePicker().pickImage(
+  //       source: ImageSource.gallery,
+  //       maxWidth: 800,
+  //       maxHeight: 600,
+  //       imageQuality: 80);
+  //   if (imagePicker == null) return;
+  //   setState(() {
+  //     imageFile = File(imagePicker.path);
+  //   });
+  // }
+
