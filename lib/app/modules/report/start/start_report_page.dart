@@ -1,17 +1,16 @@
-import 'dart:developer';
 import 'dart:io';
-import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
+import 'package:work_report/app/modules/report/start/camera_screen.dart';
 import 'package:work_report/app/modules/report/start/start_report_store.dart';
 import '../report_store.dart';
-// import '../../../../main.dart';
 
 class StartReportPage extends StatefulWidget {
   const StartReportPage({Key? key}) : super(key: key);
@@ -28,7 +27,26 @@ class _StartReportPageState
   String description = '';
   DateTime startReport = DateTime.now();
   File? imageFile;
-  final List<CameraDescription> cameras = [];
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +65,7 @@ class _StartReportPageState
                   fontWeight: FontWeight.w700)),
         ),
       ),
+      // body: const CameraScreen(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: SingleChildScrollView(
@@ -57,7 +76,16 @@ class _StartReportPageState
               children: [
                 const SizedBox(height: 20),
                 GestureDetector(
-                  onTap: () async {},
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const Dialog(
+                            insetPadding: EdgeInsets.symmetric(vertical: 20),
+                            child: CameraScreen(),
+                          );
+                        });
+                  },
                   child: Card(
                     color: Colors.white,
                     child: Container(
@@ -65,36 +93,32 @@ class _StartReportPageState
                       width: MediaQuery.of(context).size.width,
                       height: 190.0,
                       child: imageFile == null
-                          ? Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 30.0),
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 100.0,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                          ? Column(children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30.0),
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  size: 100.0,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 30.0),
-                                  child: Text(
-                                    'Toque para adicionar imagem',
-                                    style: GoogleFonts.roboto(
-                                        textStyle: const TextStyle(
-                                      fontSize: 15.0,
-                                      color: Colors.black45,
-                                      fontWeight: FontWeight.w500,
-                                    )),
-                                  ),
-                                )
-                              ],
-                            )
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30.0),
+                                child: Text(
+                                  'Toque para adicionar imagem',
+                                  style: GoogleFonts.roboto(
+                                      textStyle: const TextStyle(
+                                    fontSize: 15.0,
+                                    color: Colors.black45,
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                                ),
+                              )
+                            ])
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.file(
-                                imageFile!,
-                                fit: BoxFit.contain,
-                              ),
+                              child:
+                                  Image.file(imageFile!, fit: BoxFit.contain),
                             ),
                     ),
                   ),
