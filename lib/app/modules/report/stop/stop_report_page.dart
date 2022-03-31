@@ -147,6 +147,8 @@ class _StopReportPageState
                             confirmFunction: () async => [
                                   await store.deleteReport(
                                       widget.id, widget.initialImage),
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
                                   Modular.to.navigate('/home'),
                                 ],
                             cancelFunction: () => [
