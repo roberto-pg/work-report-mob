@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
-import 'package:work_report/app/modules/report/start/camera_screen.dart';
+import 'package:work_report/app/modules/report/camera_screen_widget.dart';
 import 'package:work_report/app/modules/report/start/start_report_store.dart';
 import '../report_store.dart';
 
@@ -26,7 +26,7 @@ class _StartReportPageState
   final _formKey = GlobalKey<FormState>();
   String description = '';
   DateTime startReport = DateTime.now();
-  File? imageFile;
+  String? get imageFile => reportStore.image.value;
 
   @override
   void initState() {
@@ -37,6 +37,9 @@ class _StartReportPageState
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    reportStore.image.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -82,7 +85,7 @@ class _StartReportPageState
                         builder: (BuildContext context) {
                           return const Dialog(
                             insetPadding: EdgeInsets.symmetric(vertical: 20),
-                            child: CameraScreen(),
+                            child: CameraScreenWidget(),
                           );
                         });
                   },
@@ -92,7 +95,7 @@ class _StartReportPageState
                       decoration: const BoxDecoration(),
                       width: MediaQuery.of(context).size.width,
                       height: 190.0,
-                      child: imageFile == null
+                      child: imageFile!.isEmpty
                           ? Column(children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(top: 30.0),
@@ -117,8 +120,8 @@ class _StartReportPageState
                             ])
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Image.file(imageFile!, fit: BoxFit.contain),
+                              child: Image.file(File(imageFile!),
+                                  fit: BoxFit.contain),
                             ),
                     ),
                   ),
@@ -187,8 +190,8 @@ class _StartReportPageState
                             var formData = FormData.fromMap({
                               "initialDescription": description,
                               "imageUrl": await MultipartFile.fromFile(
-                                  imageFile!.path,
-                                  filename: imageFile!.path,
+                                  imageFile!,
+                                  filename: imageFile!,
                                   contentType: MediaType('image', 'png')),
                               "startedAt": startReport,
                             });

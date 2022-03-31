@@ -1,19 +1,21 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:work_report/app/modules/report/report_store.dart';
 import 'package:work_report/main.dart';
 
-class CameraScreen extends StatefulWidget {
-  const CameraScreen({
+class CameraScreenWidget extends StatefulWidget {
+  const CameraScreenWidget({
     Key? key,
   }) : super(key: key);
 
   @override
-  _CameraScreenState createState() => _CameraScreenState();
+  _CameraScreenWidgetState createState() => _CameraScreenWidgetState();
 }
 
-class _CameraScreenState extends State<CameraScreen> {
+class _CameraScreenWidgetState
+    extends ModularState<CameraScreenWidget, ReportStore> {
   @override
   void initState() {
     initializeCamera(selectedCamera);
@@ -117,7 +119,9 @@ class _CameraScreenState extends State<CameraScreen> {
                 onPressed: () async {
                   await _initializeControllerFuture;
                   var xFile = await _controller.takePicture();
-                  log(xFile.path);
+
+                  store.saveImagePath(xFile.path);
+
                   setState(() {
                     capturedImages.add(File(xFile.path));
                   });
