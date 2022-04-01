@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
+import 'package:work_report/app/modules/report/camera_screen_widget.dart';
 import 'package:work_report/app/modules/report/stop/stop_report_store.dart';
 
 import '../report_store.dart';
@@ -30,7 +31,30 @@ class _StopReportPageState
   final _formKey = GlobalKey<FormState>();
   String description = '';
   DateTime stopReport = DateTime.now();
-  File? imageFile;
+  String? get imageFile => reportStore.image.value;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    reportStore.image.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +84,14 @@ class _StopReportPageState
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    _selectorImageSource();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const Dialog(
+                            insetPadding: EdgeInsets.symmetric(vertical: 20),
+                            child: CameraScreenWidget(),
+                          );
+                        });
                   },
                   child: Card(
                     color: Colors.white,
@@ -68,7 +99,7 @@ class _StopReportPageState
                       decoration: const BoxDecoration(),
                       width: MediaQuery.of(context).size.width,
                       height: 190.0,
-                      child: imageFile == null
+                      child: imageFile!.isEmpty
                           ? Column(children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.only(top: 30.0),
@@ -93,8 +124,8 @@ class _StopReportPageState
                             ])
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Image.file(imageFile!, fit: BoxFit.contain),
+                              child: Image.file(File(imageFile!),
+                                  fit: BoxFit.contain),
                             ),
                     ),
                   ),
@@ -196,9 +227,8 @@ class _StopReportPageState
 
                         var formData = FormData.fromMap({
                           "finalDescription": description,
-                          "imageUrl": await MultipartFile.fromFile(
-                              imageFile!.path,
-                              filename: imageFile!.path,
+                          "imageUrl": await MultipartFile.fromFile(imageFile!,
+                              filename: imageFile!,
                               contentType: MediaType('image', 'png')),
                           "stopedAt": stopReport,
                         });
@@ -226,97 +256,5 @@ class _StopReportPageState
         ),
       ),
     );
-  }
-
-  _selectorImageSource() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: AlertDialog(
-              title: Text('Escolha a origem:',
-                  style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black54),
-                  )),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      _openCamera();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 90,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(9.0)),
-                      child: Text("Camera",
-                          style: GoogleFonts.roboto(
-                            textStyle: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          )),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _openGallery();
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 90,
-                      height: 50.0,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(9.0)),
-                      child: Text("Galeria",
-                          style: GoogleFonts.roboto(
-                            textStyle: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  _openCamera() async {
-    final imagePicker = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        maxWidth: 800,
-        maxHeight: 600,
-        imageQuality: 80);
-    if (imagePicker == null) return;
-    setState(() {
-      imageFile = File(imagePicker.path);
-    });
-  }
-
-  _openGallery() async {
-    final imagePicker = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 800,
-        maxHeight: 600,
-        imageQuality: 80);
-    if (imagePicker == null) return;
-    setState(() {
-      imageFile = File(imagePicker.path);
-    });
   }
 }
