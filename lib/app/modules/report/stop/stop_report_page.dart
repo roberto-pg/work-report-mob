@@ -8,9 +8,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:work_report/app/core/alerts/alert_factory.dart';
 import 'package:work_report/app/core/ui/widgets/work_button.dart';
-import 'package:work_report/app/modules/report/camera_screen_widget.dart';
 import 'package:work_report/app/modules/report/stop/stop_report_store.dart';
-
+import '../camera_screen_widget.dart';
 import '../report_store.dart';
 
 class StopReportPage extends StatefulWidget {
@@ -216,7 +215,7 @@ class _StopReportPageState
                       if (formValid) {
                         _formKey.currentState!.save();
 
-                        if (imageFile == null) {
+                        if (imageFile!.isEmpty) {
                           alertFactory(
                             dismissible: true,
                             titleText: 'Oops!!',

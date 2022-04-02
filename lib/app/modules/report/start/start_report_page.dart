@@ -178,7 +178,7 @@ class _StartReportPageState
                           if (formValid) {
                             _formKey.currentState!.save();
 
-                            if (imageFile == null) {
+                            if (imageFile!.isEmpty) {
                               alertFactory(
                                 dismissible: true,
                                 titleText: 'Oops!!',
